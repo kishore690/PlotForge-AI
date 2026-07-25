@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #090909;
+  --color-sidebar: #111111;
+  --color-card: #181818;
+  --color-card-hover: #222222;
+  --color-primary: #DC2626;
+  --color-primary-hover: #EF4444;
+  --color-border: #2A2A2A;
+  --color-ink: #FFFFFF;
+  --color-ink-soft: #9CA3AF;
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-serif: 'Fraunces', Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection { background: rgba(220, 38, 38, 0.35); color: #fff; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #2A2A2A; border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: #3a3a3a; }
+
+.font-serif-display { font-family: var(--font-serif); }
+
+.ink-underline { position: relative; display: inline-block; }
+.ink-underline::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -6px;
+  height: 3px; width: 100%;
+  background: linear-gradient(90deg, transparent, #DC2626 15%, #EF4444 50%, #DC2626 85%, transparent);
+  border-radius: 999px;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: ink-draw 1.1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+  animation-delay: 0.3s;
+}
+@keyframes ink-draw { to { transform: scaleX(1); } }
+
+.glass {
+  background: rgba(24, 24, 24, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid #EF4444;
+  outline-offset: 2px;
+  border-radius: 4px;
+}

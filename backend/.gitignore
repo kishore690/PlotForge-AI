@@ -1,0 +1,64 @@
+HELP.md
+
+# ==========================
+# Maven
+# ==========================
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# ==========================
+# Spring Tool Suite (STS)
+# ==========================
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# ==========================
+# IntelliJ IDEA
+# ==========================
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# ==========================
+# NetBeans
+# ==========================
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+# ==========================
+# VS Code
+# ==========================
+.vscode/
+
+# ==========================
+# Environment Files
+# ==========================
+.env
+.env.*
+*.env
+*.env.local
+
+# Backend local configuration
+src/main/resources/application-local.yml
+# ==========================
+# Logs
+# ==========================
+*.log
+
+# ==========================
+# Operating System Files
+# ==========================
+.DS_Store
+Thumbs.db
