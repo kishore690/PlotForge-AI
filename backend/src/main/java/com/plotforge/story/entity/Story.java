@@ -33,6 +33,42 @@ public class Story {
     @Column(nullable = false)
     private String genre;
 
+    // ===== Story Settings =====
+
+    private String length;
+
+    private String style;
+
+    private String audience;
+
+    private String language;
+
+    private Integer creativity;
+
+    private String complexity;
+
+    private Integer characterCount;
+
+    private Boolean autoCharacters;
+
+    private Boolean autoWorld;
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String characters;
+
+    @Column(columnDefinition = "LONGTEXT")
+    private String world;
+
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean favorite = false;
+
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean saved = false;
+
+    // ==========================
+
     @Enumerated(EnumType.STRING)
     private StoryStatus status;
 

@@ -1,6 +1,5 @@
 package com.plotforge.story.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,12 +7,35 @@ import lombok.Setter;
 @Setter
 public class UpdateStoryRequest {
 
-    @NotBlank(message = "Title is required")
     private String title;
 
-    @NotBlank(message = "Prompt is required")
     private String prompt;
 
-    @NotBlank(message = "Genre is required")
     private String genre;
+
+    private String length;
+
+    private String style;
+
+    private String audience;
+
+    private String language;
+
+    private Integer creativity;
+
+    private String complexity;
+
+    private Integer characterCount;
+
+    private Boolean autoCharacters;
+
+    private Boolean autoWorld;
+
+    private String characters;
+
+    private String world;
+
+    private Boolean favorite;
+
+    private Boolean saved;
 }

@@ -1,0 +1,26 @@
+# =========================================================
+# PlotForge AI - Frontend
+# =========================================================
+
+node_modules/
+dist/
+dist-ssr/
+.vite/
+*.local
+
+# Vite env files (keep .env.example committed)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store

@@ -4,10 +4,10 @@ import clsx from 'clsx';
 export default function Card({ children, className, hover = true, ...props }) {
   return (
     <motion.div
-      whileHover={hover ? { y: -4, transition: { duration: 0.2 } } : {}}
+      whileHover={hover ? { y: -2, transition: { type: 'spring', stiffness: 360, damping: 32 } } : {}}
       className={clsx(
-        'bg-card border border-border rounded-2xl transition-colors duration-200',
-        hover && 'hover:bg-card-hover hover:border-[#3a3a3a]',
+        'bg-card border border-border rounded-2xl transition-colors duration-300',
+        hover && 'hover:bg-card-hover hover:border-primary/40',
         className
       )}
       {...props}

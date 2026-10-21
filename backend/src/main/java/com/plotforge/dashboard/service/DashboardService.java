@@ -1,6 +1,7 @@
 package com.plotforge.dashboard.service;
 
 import com.plotforge.dashboard.dto.DashboardResponse;
+import com.plotforge.common.exception.ResourceNotFoundException;
 import com.plotforge.story.entity.Story;
 import com.plotforge.story.entity.StoryStatus;
 import com.plotforge.story.repository.StoryRepository;
@@ -27,7 +28,7 @@ public class DashboardService {
     public DashboardResponse getDashboard(String username) {
 
         user existingUser = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         long totalStories =
                 storyRepository.countByUser(existingUser);

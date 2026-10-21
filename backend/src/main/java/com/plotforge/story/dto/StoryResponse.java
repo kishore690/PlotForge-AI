@@ -19,6 +19,33 @@ public class StoryResponse {
 
     private String genre;
 
+    // Story Settings
+    private String length;
+
+    private String style;
+
+    private String audience;
+
+    private String language;
+
+    private Integer creativity;
+
+    private String complexity;
+
+    private Integer characterCount;
+
+    private Boolean autoCharacters;
+
+    private Boolean autoWorld;
+
+    private String characters;
+
+    private String world;
+
+    private Boolean favorite;
+
+    private Boolean saved;
+
     private String status;
 
     private LocalDateTime createdAt;

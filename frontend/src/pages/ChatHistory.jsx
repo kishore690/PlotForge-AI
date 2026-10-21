@@ -1,13 +1,16 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { History, BookOpen } from 'lucide-react';
 import SearchBar from '../components/common/SearchBar';
 import EmptyState from '../components/common/EmptyState';
-import { stories } from '../data/stories';
+import { getMyStories } from "../services/libraryService";
+import { useNavigate } from "react-router-dom";
 
 function groupLabel(dateStr) {
   const date = new Date(dateStr);
-  const now = new Date('2026-07-22');
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
   const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
   if (diffDays <= 1) return 'Today';
   if (diffDays <= 2) return 'Yesterday';
@@ -16,10 +19,28 @@ function groupLabel(dateStr) {
 }
 
 export default function ChatHistory() {
+  const navigate = useNavigate();
   const [query, setQuery] = useState('');
+  const [stories, setStories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadStories = async () => {
+      try {
+        const data = await getMyStories();
+        setStories(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadStories();
+  }, []);
+
   const filtered = useMemo(
     () => stories.filter((s) => s.title.toLowerCase().includes(query.toLowerCase())),
-    [query]
+    [stories, query]
   );
 
   const groups = filtered.reduce((acc, s) => {
@@ -30,6 +51,14 @@ export default function ChatHistory() {
   }, {});
 
   const order = ['Today', 'Yesterday', 'Last Week', 'Last Month'];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen text-white text-xl">
+        Loading History...
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -50,7 +79,11 @@ export default function ChatHistory() {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="flex items-center gap-4 bg-card border border-border rounded-xl p-4 hover:bg-card-hover transition-colors"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => navigate(`/read-story/${s.id}`)}
+                    onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") navigate(`/read-story/${s.id}`); }}
+                    className="flex items-center gap-4 bg-card border border-border rounded-xl p-4 hover:bg-card-hover transition-colors cursor-pointer"
                   >
                     <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ background: s.cover }}>
                       <BookOpen size={15} className="text-white/80" />

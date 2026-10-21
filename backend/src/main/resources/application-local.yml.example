@@ -1,0 +1,22 @@
+# =========================================================
+# PlotForge Backend - Local Profile (TEMPLATE)
+#
+# Copy this file to application-local.yml and fill in real
+# values. application-local.yml is gitignored and must never
+# be committed.
+# =========================================================
+
+gemini:
+  api:
+    # Google AI Studio API key: https://aistudio.google.com/apikey
+    key: YOUR_GEMINI_API_KEY_HERE
+
+jwt:
+  # Minimum 32 characters. Generate one with:
+  #   openssl rand -base64 48
+  secret: YOUR_LONG_RANDOM_JWT_SECRET_HERE
+  expiration-ms: 86400000
+
+google:
+  # OAuth 2.0 Web application client ID; use the same value in frontend/.env
+  client-id: YOUR_GOOGLE_OAUTH_WEB_CLIENT_ID.apps.googleusercontent.com

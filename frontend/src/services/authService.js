@@ -19,3 +19,8 @@ export const register = async (registerData) => {
 
     return response.data;
 };
+
+export const loginWithGoogle = async (credential) => {
+    const response = await api.post("/auth/google", { credential });
+    return response.data;
+};

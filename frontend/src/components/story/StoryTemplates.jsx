@@ -5,16 +5,16 @@ import {
 } from 'lucide-react';
 
 const templates = [
-  { label: 'Fantasy Adventure', icon: Swords, prompt: 'A reluctant hero sets out to reclaim a stolen crown from a forest that eats travelers whole.' },
-  { label: 'Horror', icon: Ghost, prompt: 'A lighthouse keeper starts receiving radio messages from a shipwreck that sank a century ago.' },
-  { label: 'Sci-Fi', icon: Rocket, prompt: 'The last human colony ship must choose between waking its founders or continuing the journey alone.' },
-  { label: 'Mystery', icon: SearchIcon, prompt: 'A detective is hired to solve a murder that, according to every witness, happened to her.' },
-  { label: 'Romance', icon: HeartHandshake, prompt: 'Two rival chefs are forced to co-host a cooking show neither of them wanted to do.' },
-  { label: 'Historical', icon: Landmark, prompt: 'A young scribe in an ancient court discovers a forbidden manuscript hidden beneath the library.' },
-  { label: 'Mythology', icon: Sparkles, prompt: 'The last mortal blacksmith is summoned by a dying god to forge one final weapon.' },
-  { label: 'Cyberpunk', icon: Cpu, prompt: 'A hacker who erases memories for a living finds one she cannot bring herself to delete.' },
-  { label: 'Steampunk', icon: Cog, prompt: 'An airship engineer discovers her city\'s floating engine is powered by something alive.' },
-  { label: 'Space Exploration', icon: Orbit, prompt: 'A solo astronaut mapping a new moon picks up a signal that shouldn\'t exist.' },
+  { label: 'Fantasy Adventure', genre: 'Fantasy', icon: Swords, prompt: 'A reluctant hero sets out to reclaim a stolen crown from a forest that eats travelers whole.' },
+  { label: 'Horror', genre: 'Horror', icon: Ghost, prompt: 'A lighthouse keeper starts receiving radio messages from a shipwreck that sank a century ago.' },
+  { label: 'Sci-Fi', genre: 'Sci-Fi', icon: Rocket, prompt: 'The last human colony ship must choose between waking its founders or continuing the journey alone.' },
+  { label: 'Mystery', genre: 'Mystery', icon: SearchIcon, prompt: 'A detective is hired to solve a murder that, according to every witness, happened to her.' },
+  { label: 'Romance', genre: 'Romance', icon: HeartHandshake, prompt: 'Two rival chefs are forced to co-host a cooking show neither of them wanted to do.' },
+  { label: 'Historical', genre: 'Historical', icon: Landmark, prompt: 'A young scribe in an ancient court discovers a forbidden manuscript hidden beneath the library.' },
+  { label: 'Mythology', genre: 'Mythology', icon: Sparkles, prompt: 'The last mortal blacksmith is summoned by a dying god to forge one final weapon.' },
+  { label: 'Cyberpunk', genre: 'Sci-Fi', icon: Cpu, prompt: 'A hacker who erases memories for a living finds one she cannot bring herself to delete.' },
+  { label: 'Steampunk', genre: 'Adventure', icon: Cog, prompt: 'An airship engineer discovers her city\'s floating engine is powered by something alive.' },
+  { label: 'Space Exploration', genre: 'Sci-Fi', icon: Orbit, prompt: 'A solo astronaut mapping a new moon picks up a signal that shouldn\'t exist.' },
 ];
 
 export default function StoryTemplates({ onSelect }) {

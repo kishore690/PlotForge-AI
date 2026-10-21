@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import clsx from 'clsx';
 
 const variants = {
-  primary: 'bg-primary text-white hover:bg-primary-hover shadow-[0_0_0_0_rgba(220,38,38,0)] hover:shadow-[0_8px_24px_-8px_rgba(220,38,38,0.6)]',
+  primary: 'bg-primary text-[#0B0C10] hover:bg-primary-hover shadow-[0_0_0_0_rgba(102,252,241,0)] hover:shadow-[0_8px_24px_-8px_rgba(102,252,241,0.28)]',
   secondary: 'bg-card border border-border text-ink hover:bg-card-hover',
   ghost: 'bg-transparent text-ink-soft hover:text-ink hover:bg-card',
   danger: 'bg-transparent border border-primary/40 text-primary hover:bg-primary/10',
@@ -26,12 +26,12 @@ export default function Button({
 }) {
   return (
     <motion.button
-      whileHover={disabled ? {} : { scale: 1.015 }}
-      whileTap={disabled ? {} : { scale: 0.97 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+      whileHover={disabled ? {} : { scale: 1.01, y: -1 }}
+      whileTap={disabled ? {} : { scale: 0.985, y: 0 }}
+      transition={{ type: 'spring', stiffness: 360, damping: 32, mass: 0.7 }}
       disabled={disabled}
       className={clsx(
-        'inline-flex items-center justify-center gap-2 font-medium transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed',
+        'inline-flex items-center justify-center gap-2 font-medium transition-all duration-250 disabled:opacity-40 disabled:cursor-not-allowed',
         variants[variant],
         sizes[size],
         className

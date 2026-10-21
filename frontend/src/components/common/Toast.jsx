@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { CheckCircle2, XCircle, Info } from 'lucide-react';
 
 const icons = { success: CheckCircle2, error: XCircle, info: Info };
-const colors = { success: 'text-success', error: 'text-primary', info: 'text-ink-soft' };
+const colors = { success: 'text-success', error: 'text-red-400', info: 'text-ink-soft' };
 
 export default function Toast({ toasts = [] }) {
   return (

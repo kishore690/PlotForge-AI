@@ -19,7 +19,7 @@ export default function Loader({ label = 'PlotForge is crafting your story…', 
           transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
         />
         <motion.div
-          className="relative z-10 w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-red-900 flex items-center justify-center"
+          className="relative z-10 w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-[#45A29E] flex items-center justify-center"
           animate={{ scale: [1, 1.08, 1] }}
           transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
         >

@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Feather, Wand2, BookOpenText, Users2, ArrowRight, Star } from 'lucide-react';
 import Button from '../components/common/Button';
+import libraryAtmosphere from '../assets/library-atmosphere.jpg';
+import AnimatedStoryBackdrop from '../components/common/AnimatedStoryBackdrop';
 
 const features = [
   { icon: Wand2, title: 'Guided Story Builder', desc: 'Tune genre, tone, length, and complexity before a single word is written.' },
@@ -29,14 +31,17 @@ const faqs = [
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-bg overflow-x-hidden">
-      <NavBar />
-      <Hero />
-      <Features />
-      <HowItWorks />
-      <Testimonials />
-      <FAQ />
-      <Footer />
+    <div className="relative isolate min-h-screen overflow-x-hidden bg-bg">
+      <AnimatedStoryBackdrop />
+      <div className="relative z-10">
+        <NavBar />
+        <Hero />
+        <Features />
+        <HowItWorks />
+        <Testimonials />
+        <FAQ />
+        <Footer />
+      </div>
     </div>
   );
 }
@@ -46,7 +51,7 @@ function NavBar() {
     <header className="sticky top-0 z-40 glass border-b border-border">
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-red-900 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-[#45A29E] flex items-center justify-center">
             <Feather size={16} className="text-white" />
           </div>
           <span className="font-serif-display text-lg tracking-tight">PlotForge <span className="text-primary">AI</span></span>
@@ -104,13 +109,19 @@ function Hero() {
         className="relative mt-16 mx-auto max-w-3xl"
       >
         <div className="rounded-2xl border border-border bg-card p-2 shadow-2xl">
-          <div className="rounded-xl h-72 md:h-96 bg-gradient-to-br from-[#1a0505] via-[#111111] to-[#0a0a0a] flex items-center justify-center relative overflow-hidden">
+          <div
+            className="rounded-xl h-72 md:h-96 flex items-center justify-center relative overflow-hidden bg-cover bg-center"
+            style={{ backgroundImage: `linear-gradient(115deg, rgba(10,10,14,.72), rgba(10,10,14,.45) 48%, rgba(10,10,14,.82)), url(${libraryAtmosphere})` }}
+          >
             <motion.div
               className="absolute w-40 h-40 rounded-full bg-primary/20 blur-3xl"
               animate={{ x: [0, 60, 0], y: [0, -30, 0] }}
               transition={{ repeat: Infinity, duration: 8 }}
             />
-            <Feather size={56} className="text-primary/70 relative z-10" strokeWidth={1} />
+            <div className="relative z-10 text-center">
+              <Feather size={42} className="text-primary mx-auto mb-4 drop-shadow-lg" strokeWidth={1.2} />
+              <p className="font-serif-display text-2xl text-white drop-shadow-md">A world begins with a word.</p>
+            </div>
           </div>
         </div>
       </motion.div>

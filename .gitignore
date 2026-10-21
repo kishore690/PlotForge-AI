@@ -1,0 +1,50 @@
+# =========================================================
+# PlotForge AI - Repository level ignores
+# =========================================================
+
+# ==========================
+# Node / Frontend
+# ==========================
+node_modules/
+dist/
+dist-ssr/
+.vite/
+*.local
+
+# ==========================
+# Java / Backend
+# ==========================
+target/
+*.class
+
+# ==========================
+# Environment & Secrets
+# ==========================
+.env
+.env.*
+!.env.example
+*.env
+application-local.yml
+
+# ==========================
+# IDE
+# ==========================
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# ==========================
+# Logs
+# ==========================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ==========================
+# Operating System
+# ==========================
+.DS_Store
+Thumbs.db

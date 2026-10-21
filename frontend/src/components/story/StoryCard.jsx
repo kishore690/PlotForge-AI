@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
-import { Heart, BookOpen, Trash2, Clock } from "lucide-react";
+import { Heart, BookOpen, Trash2, Clock, Bookmark } from "lucide-react";
 import Badge from "../common/Badge";
+import { getDisplayStoryTitle } from "../../utils/storyTitle";
 
 export default function StoryCard({
   story,
   onOpen,
   onToggleFavorite,
+  onToggleSaved,
   onDelete,
 }) {
   // Calculate reading time
@@ -19,14 +21,16 @@ export default function StoryCard({
   );
 
   // Story preview
-  const excerpt = story.generatedStory
-    ? story.generatedStory.substring(0, 120) + "..."
+  const storyText = String(story.generatedStory || '').trim();
+  const excerpt = storyText
+    ? `${storyText.substring(0, 120)}${storyText.length > 120 ? "…" : ""}`
     : "Story not generated yet.";
 
   // Date
   const createdDate = story.createdAt
     ? new Date(story.createdAt).toLocaleDateString()
     : "";
+  const displayTitle = getDisplayStoryTitle(story.title, story.prompt);
 
   return (
     <motion.div
@@ -35,33 +39,27 @@ export default function StoryCard({
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -6 }}
       transition={{ duration: 0.3 }}
-      className="group bg-card border border-border rounded-2xl overflow-hidden hover:border-red-500/50 transition-all"
+      className="group bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/50 transition-all"
     >
       {/* Header */}
-      <div className="relative h-32 bg-gradient-to-br from-red-900 via-red-700 to-black flex items-end p-4">
+      <div className="relative h-32 bg-gradient-to-br from-primary/60 via-[#1F2833] to-[#0B0C10] flex items-end p-4">
         <Badge tone="primary">{story.genre}</Badge>
 
-        <button
-          type="button"
-          onClick={() => onToggleFavorite?.(story.id)}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/40 backdrop-blur flex items-center justify-center hover:bg-red-600/40 transition"
-        >
-          <Heart
-            size={15}
-            className={
-              story.favorite
-                ? "text-red-500 fill-red-500"
-                : "text-white"
-            }
-          />
-        </button>
+        <div className="absolute top-3 right-3 flex gap-2">
+          <button type="button" aria-label={story.saved ? "Remove from saved stories" : "Save story"} aria-pressed={Boolean(story.saved)} onClick={() => onToggleSaved?.(story.id)} className="w-8 h-8 rounded-full bg-black/40 backdrop-blur flex items-center justify-center hover:bg-amber-600/40 transition">
+            <Bookmark size={15} className={story.saved ? "text-amber-300 fill-amber-300" : "text-white"} />
+          </button>
+          <button type="button" aria-label={story.favorite ? "Remove from favorites" : "Add to favorites"} aria-pressed={Boolean(story.favorite)} onClick={() => onToggleFavorite?.(story.id)} className="w-8 h-8 rounded-full bg-black/40 backdrop-blur flex items-center justify-center hover:bg-primary/40 transition">
+            <Heart size={15} className={story.favorite ? "text-primary fill-primary" : "text-white"} />
+          </button>
+        </div>
       </div>
 
       {/* Body */}
       <div className="p-4">
 
-        <h3 className="font-semibold text-lg text-white truncate">
-          {story.title}
+        <h3 className="font-semibold text-lg text-ink line-clamp-2 leading-snug">
+          {displayTitle}
         </h3>
 
         <p className="text-sm text-gray-400 mt-2 line-clamp-3">
@@ -84,7 +82,7 @@ export default function StoryCard({
           <button
             type="button"
             onClick={() => onOpen(story)}
-            className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white transition"
+            className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-primary hover:bg-primary-hover text-[#0B0C10] transition"
           >
             <BookOpen size={15} />
             Read Story

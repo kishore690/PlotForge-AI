@@ -10,6 +10,11 @@ export const getStory = async (id) => {
     return response.data;
 };
 
+export const importStory = async (story) => {
+    const response = await api.post("/story/import", story);
+    return response.data;
+};
+
 export const deleteStory = async (id) => {
     await api.delete(`/story/${id}`);
 };

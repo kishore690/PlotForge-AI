@@ -8,9 +8,7 @@ export default function Footer() {
         <span>PlotForge</span>
       </div>
       <div className="flex items-center gap-4">
-        <a href="#" className="hover:text-ink transition-colors">Privacy</a>
-        <a href="#" className="hover:text-ink transition-colors">Terms</a>
-        <a href="#" className="hover:text-ink transition-colors">Support</a>
+        <span>Made for curious storytellers</span>
         <span>v1.0.0</span>
       </div>
     </footer>

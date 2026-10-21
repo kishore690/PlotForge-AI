@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
-import { Sparkles, ArrowLeft, LayoutTemplate } from 'lucide-react';
+import { Sparkles, ArrowLeft, LayoutTemplate, BookOpen, WandSparkles } from 'lucide-react';
 import ChipGroup from '../components/story/ChipGroup';
 import Slider from '../components/story/Slider';
 import CharacterBuilder from '../components/story/CharacterBuilder';
@@ -10,37 +10,45 @@ import StoryPreview from '../components/story/StoryPreview';
 import StoryViewer from '../components/story/StoryViewer';
 import StoryTemplates from '../components/story/StoryTemplates';
 import Button from '../components/common/Button';
-import Loader from '../components/common/Loader';
 import { genres, lengths, styles, audiences, languages, complexities } from '../data/stories';
 import { createStory, generateStory } from "../services/storyService";
+import { updateStory } from "../services/libraryService";
+import { getPreferences } from "../services/preferencesService";
+import { createStoryTitle } from "../utils/storyTitle";
 const promptSuggestions = [
   'A retired dragon slayer is hired to protect the last dragon alive.',
   'Two sisters inherit a bookstore where every book writes itself.',
   'A city where it has rained for forty years finally sees the sun.',
 ];
 
+
 export default function NewStory() {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState(() => ({
     prompt: '',
-    genre: 'Fantasy',
-    length: 'Medium',
-    style: 'Cinematic',
-    audience: 'Adult',
-    language: 'English',
-    creativity: 65,
-    complexity: 'Moderate',
-    characterCount: 2,
-    autoCharacters: false,
-    autoWorld: true,
-  });
+    ...getPreferences().storyDefaults,
+    language: getPreferences().language,
+  }));
   const [characters, setCharacters] = useState([]);
   const [world, setWorld] = useState({});
   const [generating, setGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState('');
   const [generated, setGenerated] = useState(false);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showTemplates, setShowTemplates] = useState(searchParams.get('templates') === '1');
   const [story, setStory] = useState(null);
+  const [generationStage, setGenerationStage] = useState(0);
   const set = (key, value) => setForm((f) => ({ ...f, [key]: value }));
+  useEffect(() => {
+    if (searchParams.get('random') !== '1') return;
+    const prompt = promptSuggestions[Math.floor(Math.random() * promptSuggestions.length)];
+    setForm((current) => ({ ...current, prompt }));
+    setSearchParams({}, { replace: true });
+  }, [searchParams, setSearchParams]);
+  useEffect(() => {
+    if (!generating) { setGenerationStage(0); return undefined; }
+    const timer = window.setInterval(() => setGenerationStage((stage) => Math.min(stage + 1, 3)), 2600);
+    return () => window.clearInterval(timer);
+  }, [generating]);
   const updateCharacter = (i, field, value) => {
     setCharacters((prev) => {
       const next = [...prev];
@@ -52,28 +60,51 @@ export default function NewStory() {
   const handleGenerate = async () => {
 
     if (!form.prompt.trim()) {
-        alert("Please enter a story prompt.");
+        setGenerationError("Add a story idea before generating.");
         return;
     }
 
     try {
 
         setGenerating(true);
+        setGenerationError('');
 
-        // Create story
-        const createdStory = await createStory({
-            title:
-                form.prompt.length > 40
-                    ? form.prompt.substring(0, 40)
-                    : form.prompt,
-            prompt: form.prompt,
-            genre: form.genre,
-        });
+        const storyPayload = {
+    title: createStoryTitle(form.prompt),
+
+    prompt: form.prompt,
+    genre: form.genre,
+
+    length: form.length,
+    style: form.style,
+    audience: form.audience,
+    language: form.language,
+    creativity: form.creativity,
+    complexity: form.complexity,
+
+    characterCount: form.characterCount,
+    autoCharacters: form.autoCharacters,
+    autoWorld: form.autoWorld,
+
+    characters: JSON.stringify(characters),
+    world: JSON.stringify(world),
+};
+
+        // Reuse the saved draft if generation failed previously so retries do not create duplicates.
+        const createdStory = story?.id && !story.generatedStory
+          ? await updateStory(story.id, storyPayload)
+          : await createStory(storyPayload);
+        setStory(createdStory);
 
         // Generate AI story
         const generatedStory = await generateStory(createdStory.id);
 
         setStory(generatedStory);
+
+        const preferences = getPreferences();
+        if (preferences.notifications.storyCompleted && document.hidden && "Notification" in window && Notification.permission === "granted") {
+          new Notification("Your PlotForge story is ready", { body: generatedStory.title || "Open PlotForge to read your story." });
+        }
 
         setGenerated(true);
 
@@ -81,7 +112,7 @@ export default function NewStory() {
 
         console.error(error);
 
-        alert("Failed to generate story.");
+        setGenerationError(error.message || "Failed to generate story. Please try again.");
 
     } finally {
 
@@ -91,7 +122,28 @@ export default function NewStory() {
 
 };
 
-  if (generating) return <Loader label="PlotForge is crafting your story…" />;
+  if (generating) {
+    const stages = ["Reading your idea", "Building the world and characters", "Writing the story", "Polishing the ending"];
+    return (
+      <div className="mx-auto flex min-h-[65vh] max-w-2xl items-center justify-center px-4 py-12">
+        <section aria-live="polite" className="w-full rounded-3xl border border-border bg-card p-7 shadow-xl sm:p-10">
+          <div className="mb-7 flex items-center gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary"><WandSparkles size={22} /></div>
+            <div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Your story is taking shape</p><h2 className="mt-1 text-xl font-semibold text-ink">A little imagination, in progress</h2></div>
+          </div>
+          <div className="mb-6 rounded-2xl border border-border bg-bg px-5 py-4">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-ink-soft">Your starting idea</p>
+            <p className="text-sm leading-6 text-ink">{form.prompt}</p>
+          </div>
+          <div className="mb-7 h-1.5 overflow-hidden rounded-full bg-border"><motion.div className="h-full w-1/3 rounded-full bg-primary" animate={{ x: ["-110%", "310%"] }} transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }} /></div>
+          <div className="space-y-3">
+            {stages.map((stage, index) => <div key={stage} className={`flex items-center gap-3 text-sm transition-colors ${index <= generationStage ? "text-ink" : "text-ink-soft/60"}`}><span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${index < generationStage ? "bg-primary text-white" : index === generationStage ? "bg-primary/15 text-primary" : "border border-border"}`}>{index < generationStage ? "✓" : index + 1}</span>{stage}{index === generationStage && <span className="ml-auto text-xs text-primary">Working…</span>}</div>)}
+          </div>
+          <div className="mt-7 flex items-center gap-2 border-t border-border pt-5 text-xs text-ink-soft"><BookOpen size={14} />Keep this page open while the story is being written.</div>
+        </section>
+      </div>
+    );
+  }
 
   if (generated) {
     return (
@@ -108,6 +160,7 @@ export default function NewStory() {
     genre={story.genre}
     readingTime={{ Short: 5, Medium: 12, Long: 25 }[form.length]}
     story={story}
+    onStoryChange={setStory}
 />
         </div>
       </div>
@@ -119,7 +172,7 @@ export default function NewStory() {
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <div className="bg-card border border-border rounded-2xl p-6 mb-6">
           <div className="flex items-center justify-between mb-2">
-            <label className="block text-xs font-medium text-ink-soft uppercase tracking-wide">Your Story Idea</label>
+            <label htmlFor="story-prompt" className="block text-xs font-medium text-ink-soft uppercase tracking-wide">Your Story Idea</label>
             <button
               type="button"
               onClick={() => setShowTemplates((s) => !s)}
@@ -133,13 +186,14 @@ export default function NewStory() {
             <StoryTemplates
               onSelect={(t) => {
                 set('prompt', t.prompt);
-                set('genre', t.label === 'Fantasy Adventure' ? 'Fantasy' : form.genre);
+                set('genre', t.genre);
                 setShowTemplates(false);
               }}
             />
           )}
 
           <textarea
+            id="story-prompt"
             value={form.prompt}
             onChange={(e) => set('prompt', e.target.value)}
             placeholder="Describe the story you want…"
@@ -194,6 +248,11 @@ export default function NewStory() {
           />
         </div>
 
+        {generationError && (
+          <p role="alert" className="mt-4 rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-ink">
+            {generationError}
+          </p>
+        )}
         <Button variant="primary" size="lg" icon={Sparkles} className="w-full mt-6" onClick={handleGenerate}>
           Generate Story
         </Button>

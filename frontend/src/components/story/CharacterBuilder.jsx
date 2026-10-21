@@ -35,7 +35,7 @@ export default function CharacterBuilder({ count, setCount, auto, setAuto, chara
                 key={n}
                 onClick={() => setCount(n)}
                 className={`w-9 h-9 rounded-lg text-xs font-semibold border transition-colors ${
-                  count === n ? 'bg-primary/15 border-primary/50 text-red-400' : 'bg-card border-border text-ink-soft hover:text-ink'
+                  count === n ? 'bg-primary/15 border-primary/50 text-primary' : 'bg-card border-border text-ink-soft hover:text-ink'
                 }`}
               >
                 {n}
@@ -55,7 +55,7 @@ export default function CharacterBuilder({ count, setCount, auto, setAuto, chara
                   className="bg-card border border-border rounded-xl p-4 overflow-hidden"
                 >
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-red-900 flex items-center justify-center text-xs font-semibold text-white shrink-0">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary to-[#45A29E] flex items-center justify-center text-xs font-semibold text-[#0B0C10] shrink-0">
                       {(characters?.[i]?.Name || `C${i + 1}`).slice(0, 2).toUpperCase()}
                     </div>
                     <p className="text-xs font-semibold text-ink">Character {i + 1}</p>

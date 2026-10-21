@@ -28,11 +28,11 @@ export default function Sidebar() {
   return (
     <motion.aside
       animate={{ width: collapsed ? 76 : 248 }}
-      transition={{ type: 'spring', stiffness: 260, damping: 30 }}
-      className="hidden md:flex flex-col shrink-0 h-screen sticky top-0 bg-sidebar border-r border-border py-5 px-3"
+      transition={{ type: 'spring', stiffness: 220, damping: 30, mass: 0.85 }}
+      className="relative z-10 hidden h-screen shrink-0 flex-col border-r border-border bg-sidebar/95 px-3 py-5 backdrop-blur-xl md:sticky md:top-0 md:flex"
     >
       <div className="flex items-center gap-2.5 px-2 mb-8 overflow-hidden">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-red-900 flex items-center justify-center shrink-0">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-[#45A29E] flex items-center justify-center shrink-0">
           <Feather size={16} className="text-white" strokeWidth={2} />
         </div>
         {!collapsed && (
@@ -53,7 +53,10 @@ export default function Sidebar() {
           <SidebarLink key={item.to} item={item} collapsed={collapsed} />
         ))}
         <button
-          onClick={() => navigate('/login')}
+          onClick={() => {
+              localStorage.removeItem("token");
+              navigate("/login");
+          }}
           className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-ink-soft hover:text-ink hover:bg-card transition-colors"
         >
           <LogOut size={18} strokeWidth={1.75} className="shrink-0" />
@@ -89,7 +92,7 @@ function SidebarLink({ item, collapsed }) {
             <motion.span
               layoutId="active-pill"
               className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-primary rounded-full"
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              transition={{ type: 'spring', stiffness: 320, damping: 32, mass: 0.8 }}
             />
           )}
           <Icon size={18} strokeWidth={1.75} className={clsx('shrink-0', isActive && 'text-primary')} />

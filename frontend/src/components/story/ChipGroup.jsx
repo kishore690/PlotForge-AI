@@ -27,7 +27,7 @@ export default function ChipGroup({ label, options, value, onChange, multi = fal
               className={clsx(
                 'relative px-3.5 py-1.5 rounded-lg text-xs font-medium border transition-colors duration-150',
                 active
-                  ? 'bg-primary/15 border-primary/50 text-red-400'
+                  ? 'bg-primary/15 border-primary/50 text-primary'
                   : 'bg-card border-border text-ink-soft hover:text-ink hover:border-[#3a3a3a]'
               )}
             >

@@ -3,11 +3,11 @@ package com.plotforge.story.controller;
 import com.plotforge.story.dto.CreateStoryRequest;
 import com.plotforge.story.dto.StoryResponse;
 import com.plotforge.story.dto.UpdateStoryRequest;
+import com.plotforge.story.dto.ImportStoryRequest;
 import com.plotforge.story.service.StoryService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import com.plotforge.story.dto.UpdateStoryRequest;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 
@@ -32,6 +32,13 @@ public class StoryController {
         );
     }
 
+    @PostMapping("/import")
+    public StoryResponse importStory(
+            @Valid @RequestBody ImportStoryRequest request,
+            Authentication authentication) {
+        return storyService.importStory(request, authentication.getName());
+    }
+
     @GetMapping("/my-stories")
     public List<StoryResponse> getMyStories(Authentication authentication) {
 
@@ -40,48 +47,49 @@ public class StoryController {
 
     @GetMapping("/{id}")
     public StoryResponse getStoryById(
-        @PathVariable Long id,
-        Authentication authentication) {
+            @PathVariable Long id,
+            Authentication authentication) {
 
-    return storyService.getStoryById(
-            id,
-            authentication.getName()
-    );
-    }
-    @PutMapping("/{id}")
-    public StoryResponse updateStory(
-        @PathVariable Long id,
-        @Valid @RequestBody UpdateStoryRequest request,
-        Authentication authentication) {
-
-        return storyService.updateStory(
-            id,
-            request,
-            authentication.getName()
+        return storyService.getStoryById(
+                id,
+                authentication.getName()
         );
     }
+
+    @PutMapping("/{id}")
+    public StoryResponse updateStory(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateStoryRequest request,
+            Authentication authentication) {
+
+        return storyService.updateStory(
+                id,
+                request,
+                authentication.getName()
+        );
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStory(
-        @PathVariable Long id,
-        Authentication authentication) {
+            @PathVariable Long id,
+            Authentication authentication) {
 
-    storyService.deleteStory(id, authentication.getName());
+        storyService.deleteStory(id, authentication.getName());
 
-    return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build();
     }
+
     @PostMapping("/{id}/generate")
-public ResponseEntity<StoryResponse> generateStory(
-        @PathVariable Long id,
-        Authentication authentication) {
+    public ResponseEntity<StoryResponse> generateStory(
+            @PathVariable Long id,
+            Authentication authentication) {
 
-    System.out.println(">>> GENERATE ENDPOINT HIT <<<");
+        StoryResponse response =
+                storyService.generateStory(
+                        id,
+                        authentication.getName()
+                );
 
-    StoryResponse response =
-            storyService.generateStory(
-                    id,
-                    authentication.getName()
-            );
-
-    return ResponseEntity.ok(response);
-}
+        return ResponseEntity.ok(response);
+    }
 }
