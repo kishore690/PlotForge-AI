@@ -50,7 +50,26 @@ Set `VITE_API_BASE_URL` if the API is not at `http://localhost:8081/api`. Set `S
 
 Build the frontend with `npm run build` and serve the generated `frontend/dist` directory. Configure the static host to rewrite unknown paths to `index.html` so routes such as `/new-story` continue to work after refresh. By default, production frontend requests use `/api`; route that path to the backend on the same host, or set `VITE_API_BASE_URL` to the full public API base URL before building.
 
-Run the backend with `SPRING_PROFILES_ACTIVE=prod` and provide `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `GEMINI_API_KEY`, a strong `JWT_SECRET` (at least 32 characters), `APP_CORS_ALLOWED_ORIGINS` (comma-separated exact frontend origins), and `GOOGLE_CLIENT_ID` when Google sign-in is enabled. Production uses schema validation, disables SQL output and Swagger UI, and requires its database and CORS settings. Run database migrations before deployment because production does not alter the schema automatically.
+Run the backend with `SPRING_PROFILES_ACTIVE=prod` and provide `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `GEMINI_API_KEY`, a strong `JWT_SECRET` (at least 32 characters), `APP_CORS_ALLOWED_ORIGINS` (comma-separated exact frontend origins), and `GOOGLE_CLIENT_ID` when Google sign-in is enabled. Production uses schema validation, disables SQL output and Swagger UI, and requires its database and CORS settings. Flyway applies versioned schema migrations at startup; add future changes under `backend/src/main/resources/db/migration`.
+
+### Deploy to Railway
+
+The repository includes Dockerfiles and Railway configuration for separate frontend and backend services. Create a Railway project from this GitHub repository and add a managed MySQL service. Name the services exactly `Backend`, `Frontend`, and `MySQL` so the reference variables below resolve. Configure the backend service with root directory `/backend` and config file `/backend/railway.toml`; configure the frontend with root directory `/frontend` and config file `/frontend/railway.toml`. Deploy the backend and frontend after adding the variables below. Railway's monorepo setup uses a separate service per root directory; its config file path stays relative to the repository root.
+
+Set backend variables in Railway (use the MySQL service's private variables):
+
+```text
+SPRING_PROFILES_ACTIVE=prod
+DB_URL=jdbc:mysql://${{MySQL.MYSQLHOST}}:${{MySQL.MYSQLPORT}}/${{MySQL.MYSQLDATABASE}}?serverTimezone=UTC
+DB_USERNAME=${{MySQL.MYSQLUSER}}
+DB_PASSWORD=${{MySQL.MYSQLPASSWORD}}
+GEMINI_API_KEY=<new Gemini API key>
+JWT_SECRET=<new random value of at least 32 characters>
+GOOGLE_CLIENT_ID=<Google OAuth web client ID>
+APP_CORS_ALLOWED_ORIGINS=https://${{Frontend.RAILWAY_PUBLIC_DOMAIN}}
+```
+
+Set frontend service variables `API_UPSTREAM=${{Backend.RAILWAY_PRIVATE_DOMAIN}}:${{Backend.PORT}}` and `VITE_GOOGLE_CLIENT_ID=<public Google OAuth web client ID>`. Generate a public domain for the frontend service only. Then add the frontend's HTTPS origin to the Google OAuth client's authorized JavaScript origins. The frontend proxies `/api` to the backend over Railway's private network, so the API stays private and browser requests remain same-origin. The Google client ID is public and gets baked into the frontend build; keep all backend secrets in Railway's Variables panel and never add them to the repository or frontend variables.
 
 ## Build and lint
 

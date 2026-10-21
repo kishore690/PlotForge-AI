@@ -1,0 +1,6 @@
+.git
+target
+*.log
+.env
+.env.*
+src/main/resources/application-local.yml

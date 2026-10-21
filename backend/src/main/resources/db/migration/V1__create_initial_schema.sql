@@ -1,0 +1,43 @@
+CREATE TABLE users (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    created_at DATETIME(6) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    google_subject VARCHAR(255) NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(255) NOT NULL,
+    updated_at DATETIME(6) NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT uk_users_email UNIQUE (email),
+    CONSTRAINT uk_users_google_subject UNIQUE (google_subject),
+    CONSTRAINT uk_users_username UNIQUE (username)
+);
+
+CREATE TABLE stories (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    audience VARCHAR(255) NULL,
+    auto_characters BIT(1) NULL,
+    auto_world BIT(1) NULL,
+    character_count INT NULL,
+    characters LONGTEXT NULL,
+    complexity VARCHAR(255) NULL,
+    creativity INT NULL,
+    created_at DATETIME(6) NULL,
+    favorite BIT(1) NOT NULL,
+    generated_story LONGTEXT NULL,
+    genre VARCHAR(255) NOT NULL,
+    language VARCHAR(255) NULL,
+    length VARCHAR(255) NULL,
+    prompt TEXT NULL,
+    saved BIT(1) NOT NULL,
+    status VARCHAR(255) NULL,
+    style VARCHAR(255) NULL,
+    title VARCHAR(255) NOT NULL,
+    updated_at DATETIME(6) NULL,
+    user_id BIGINT NULL,
+    world LONGTEXT NULL,
+    PRIMARY KEY (id),
+    INDEX idx_stories_user_created (user_id, created_at),
+    CONSTRAINT fk_stories_user FOREIGN KEY (user_id) REFERENCES users (id)
+);
